@@ -1,25 +1,10 @@
 # Etapa 1: Construcción - ccenteno
-FROM maven:3.8.5-openjdk-17 AS builder
-
-WORKDIR /app
-COPY pom.xml .
-COPY mvnw mvnw.cmd .
-
-RUN chmod +x mvnw
-RUN mvn wrapper:wrapper
-
-
-RUN ./mvnw dependency:go-offline
-COPY src ./src
-
-RUN ./mvnw clean package -DskipTests
-
-FROM openjdk:17-jdk-slim
-
-WORKDIR /app
-
-COPY --from=builder /app/target/demo-0.0.1-SNAPSHOT.jar /app/demo.jar
-
-EXPOSE 8080
-
-CMD ["java", "-jar", "/app/demo.jar"]
+# Dockerfile para la aplicación demo
+FROM openjdk:17-jdk-slim  
+# Usa Java 17 como base
+COPY target/demo-0.0.1-SNAPSHOT.jar /app/demo.jar 
+ # Copia el JAR generado a la imagen
+EXPOSE 8080  
+# Exponer el puerto 8080
+ENTRYPOINT ["java", "-jar", "/app/demo.jar"]  
+# Ejecutar la aplicación
